@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install stylua
+        run: |
+          curl -fsSLo /tmp/stylua.zip https://github.com/JohnnyMorganz/StyLua/releases/latest/download/stylua-linux-x86_64.zip
+          unzip -o /tmp/stylua.zip -d /tmp/stylua-bin
+          echo "/tmp/stylua-bin" >> "$GITHUB_PATH"
+
+      - name: Check formatting
+        run: stylua --check . -g '**/*.lua'

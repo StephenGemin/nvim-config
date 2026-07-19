@@ -13,3 +13,5 @@ vim.opt.rtp:prepend(lazypath)
 local lazy_config = require "configs.lazy"
 
 require("lazy").setup({}, lazy_config)
+
+vim.cmd.colorscheme "onedark"

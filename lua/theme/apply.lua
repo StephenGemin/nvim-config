@@ -6,6 +6,7 @@ return function(palette)
   local colors = palette.base_30
   local theme = palette.base_16
 
+  -- Clear the previous theme's highlights/syntax links so switching (:SetTheme) leaves nothing stale.
   vim.cmd "hi clear"
   if vim.fn.exists "syntax_on" == 1 then
     vim.cmd "syntax reset"

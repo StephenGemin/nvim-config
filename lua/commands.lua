@@ -1,5 +1,6 @@
 vim.api.nvim_create_user_command("SetTheme", function(opts)
   vim.cmd.colorscheme(opts.args)
+  require("theme.state").write(opts.args)
 end, {
   nargs = 1,
   complete = function(arg_lead)
@@ -12,5 +13,5 @@ end, {
     end
     return vim.tbl_keys(seen)
   end,
-  desc = "Switch colorscheme for this session (does not persist across restarts)",
+  desc = "Switch colorscheme and persist it across restarts",
 })

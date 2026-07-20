@@ -14,7 +14,7 @@ local lazy_config = require "configs.lazy"
 
 require("lazy").setup({}, lazy_config)
 
-vim.cmd.colorscheme "onedark"
+vim.cmd.colorscheme(require("theme.state").read "onedark")
 
 require "options"
 require "autocmds"

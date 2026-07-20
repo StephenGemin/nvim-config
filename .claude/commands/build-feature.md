@@ -69,9 +69,19 @@ instead of a feature commit followed by a trail of fixup commits.
 
 ## Phase 5: Commit + checkpoint
 
-Now that the chunk is implemented and reviewed, make a local commit for it (never `git
-push`). Show `git log -1 --stat` and **checkpoint: pause for the user's go-ahead** before
-continuing.
+Now that the chunk is implemented and reviewed, make a local commit for it (never `git push`).
+
+**Commit message format:**
+- Title: `type(scope): summary` in the imperative mood, matching existing history (check
+  `git log --oneline`).
+- Body: a bulleted list of concrete changes, not a prose paragraph. Every bullet must be
+  traceable to something in `git diff --cached` — no forward-looking or aspirational claims
+  about what the change enables later.
+- Never cite a path in the body unless `git ls-files <path>` confirms it's tracked.
+  Gitignored/local-only files (e.g. `.design_docs/`) aren't visible to anyone reading the
+  commit on the remote.
+
+Show `git log -1 --stat` and **checkpoint: pause for the user's go-ahead** before continuing.
 
 ## Phase 6: Docs
 

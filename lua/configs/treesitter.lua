@@ -22,6 +22,8 @@ require("nvim-treesitter").install {
   "toml",
   "python",
   "c_sharp",
+  "c",
+  "cpp",
   "markdown",
   "markdown_inline",
 }

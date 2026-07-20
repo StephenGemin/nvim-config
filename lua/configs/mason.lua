@@ -15,10 +15,12 @@ M.ensure_installed = {
   "pyright",
   "ruff",
   "omnisharp",
+  "clangd",
   "prettier",
   "gofumpt",
   "goimports",
   "csharpier",
+  "clang-format",
   -- rustfmt has no mason package (ships via rustup); install with `rustup component add rustfmt`
 }
 

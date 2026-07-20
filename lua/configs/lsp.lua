@@ -52,4 +52,5 @@ vim.lsp.enable {
   "pyright",
   "ruff",
   "omnisharp",
+  "clangd",
 }

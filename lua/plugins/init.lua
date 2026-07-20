@@ -63,4 +63,13 @@ return {
       require("telescope").setup(require "configs.telescope")
     end,
   },
+
+  {
+    "lewis6991/gitsigns.nvim",
+    -- no lua/configs/gitsigns.lua: NVChad's only customization here is two sign-text glyphs,
+    -- not worth reproducing (see license-posture decision) or inventing our own; same call
+    -- already made for blink.cmp's dropped configs/blink.lua
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {},
+  },
 }

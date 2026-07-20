@@ -78,4 +78,14 @@ return {
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     opts = require "configs.nvimtree",
   },
+
+  {
+    "brenoprata10/nvim-highlight-colors",
+    -- no lua/configs/highlight-colors.lua: its own defaults (hex/rgb/hsl/named colors on,
+    -- background-color render, tailwind/ansi off) already cover this repo's needs
+    -- VeryLazy (not BufReadPre/BufNewFile): setup() retroactively highlights every open buffer,
+    -- so it must fire even on a no-file startup session that never triggers a buf-read event
+    event = "VeryLazy",
+    opts = {},
+  },
 }

@@ -74,9 +74,29 @@ Now that the chunk is implemented and reviewed, make a local commit for it (neve
 **Commit message format:**
 - Title: `type(scope): summary` in the imperative mood, matching existing history (check
   `git log --oneline`).
-- Body: a bulleted list of concrete changes, not a prose paragraph. Every bullet must be
+- Default to title-only, no body — a commit message is not a changelog. `git show --stat` and
+  `git diff` already say which files changed, and a code comment already says why a line is
+  written the way it is; restating either in the body is the exact verbosity this rule exists
+  to prevent, and it must be earned, not assumed.
+- Add a body only when there's something a reader genuinely cannot get from the diff or the
+  title: a required manual follow-up step (e.g. `rustup component add rustfmt`), a breaking
+  change, or a non-obvious gotcha. If you're unsure the information clears that bar, leave it
+  out.
+- When a body is warranted, keep it to 1-3 bullets stating *what* the reader needs to know, not
+  *why* the change was made or designed that way, and never a per-file itemization of the diff.
+  Never restate a code comment in a bullet — its rationale or a link it points to, freshly
+  phrased or not; if it's worth saying, it's already in the comment. Every bullet must be
   traceable to something in `git diff --cached` — no forward-looking or aspirational claims
   about what the change enables later.
+- Never describe verification steps in the body (e.g. "ran `stylua --check`", "tested by
+  opening Neovim and exercising X"). That belongs in this session's checkpoint conversation
+  with the user, not in history.
+- Mention a change to a doc file (`AGENTS.md`, `README.md`, etc.) in the body only when
+  updating that file *is* the point of the commit. If it's touched only to stay in sync with
+  the src change this chunk already makes — whether that's an `AGENTS.md` Project-structure
+  update landing in the same Phase 3 diff, or a `README.md` update Phase 6 amends in later —
+  leave it out: the diff already shows it, and it's incidental upkeep, not a separate thing
+  worth a reader's attention.
 - Never cite a path in the body unless `git ls-files <path>` confirms it's tracked.
   Gitignored/local-only files (e.g. `.design_docs/`) aren't visible to anyone reading the
   commit on the remote.
@@ -93,8 +113,18 @@ behind it. This is safe by construction here: Phase 5 commits are always local a
 (the hard rule at the top of this file forbids `git push`), so amending never rewrites shared
 history.
 
+Apply Phase 5's body rule to the amend too: if doc-writer's change is purely descriptive sync
+(it documents something already evident from the src diff, e.g. a keymap visible in the code),
+amend the diff only and leave the message as-is. If it adds something a reader genuinely
+couldn't get from the diff — a new manual setup/prerequisite step, a breaking change to how
+the feature is used — amend the message as well (`git commit --amend -m`) so it doesn't go
+silent on something only the docs revealed. Show `git log -1 --stat` after amending either
+way.
+
 ## Phase 7: Final checkpoint
 
-Summarize all commits made this run (`git log --oneline` over the starting-ref..HEAD range),
-explicitly confirm nothing was pushed (e.g. via `git log origin/main..HEAD`), and ask the
-user whether to continue with something else or stop here.
+Summarize all commits made this run — show full messages, not just titles (e.g. `git log`
+over the starting-ref..HEAD range), so the user can review any bodies picked up in Phase 5 or
+Phase 6 alongside the diffs — explicitly confirm nothing was pushed (e.g. via
+`git log origin/main..HEAD`), and ask the user whether to continue with something else or
+stop here.

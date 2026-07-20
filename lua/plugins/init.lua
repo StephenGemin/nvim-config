@@ -52,4 +52,15 @@ return {
     event = "InsertEnter",
     opts = {},
   },
+
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    -- config (not opts): configs.telescope references telescope.actions, which isn't
+    -- on the runtimepath until this plugin loads
+    config = function()
+      require("telescope").setup(require "configs.telescope")
+    end,
+  },
 }

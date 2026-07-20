@@ -20,6 +20,14 @@ return {
     end,
   },
 
+  {
+    -- eager: telescope and nvim-tree both check for devicons opportunistically on render
+    -- (not just once at their own setup), so it must already be loaded before either first draws
+    "nvim-tree/nvim-web-devicons",
+    lazy = false,
+    opts = {},
+  },
+
   -- LAZY LOAD (event/cmd-gated) --
 
   {
@@ -87,5 +95,26 @@ return {
     -- so it must fire even on a no-file startup session that never triggers a buf-read event
     event = "VeryLazy",
     opts = {},
+  },
+
+  {
+    "folke/which-key.nvim",
+    -- no keys = {...} block (upstream's README suggests one for <leader>?): global leader
+    -- bindings belong in lua/mappings.lua, not scattered across plugin specs (see Phase 7)
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    -- main = "ibl": the plugin's actual module name differs from its repo name (it also ships a
+    -- legacy v2 compat shim lazy.nvim could otherwise auto-detect); matches upstream's own spec
+    main = "ibl",
+    event = { "BufReadPre", "BufNewFile" },
+    -- config (not opts): configs["indent-blankline"] references ibl.hooks, which isn't
+    -- on the runtimepath until this plugin loads
+    config = function()
+      require "configs.indent-blankline"
+    end,
   },
 }

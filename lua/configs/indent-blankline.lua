@@ -1,0 +1,7 @@
+local hooks = require "ibl.hooks"
+
+-- hide the leftmost indent guide on blank/whitespace-only lines, so an empty line inside
+-- an indented block doesn't show a stray guide character at the first level
+hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+
+require("ibl").setup {}

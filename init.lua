@@ -18,3 +18,4 @@ vim.cmd.colorscheme "onedark"
 
 require "options"
 require "autocmds"
+require "commands"

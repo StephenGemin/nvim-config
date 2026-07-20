@@ -1,0 +1,43 @@
+-- Palette ported from NvChad's base46 onedark theme (base46/themes/onedark.lua),
+-- hand-written here with zero external dependency.
+
+return {
+  base_30 = {
+    white = "#abb2bf",
+    darker_black = "#1b1f27",
+    black = "#1e222a",
+    black2 = "#252931",
+    one_bg = "#282c34",
+    one_bg2 = "#353b45",
+    one_bg3 = "#373b43",
+    grey = "#42464e",
+    grey_fg = "#565c64",
+    grey_fg2 = "#6f737b",
+    light_grey = "#6f737b",
+    red = "#e06c75",
+    green = "#98c379",
+    blue = "#61afef",
+    purple = "#de98fd",
+    teal = "#519ABA",
+    yellow = "#e7c787",
+    line = "#31353d",
+    pmenu_bg = "#61afef",
+  },
+
+  base_16 = {
+    base00 = "#1e222a",
+    base01 = "#353b45",
+    base02 = "#3e4451",
+    base03 = "#545862",
+    base04 = "#565c64",
+    base05 = "#abb2bf",
+    base08 = "#e06c75",
+    base09 = "#d19a66",
+    base0A = "#e5c07b",
+    base0B = "#98c379",
+    base0C = "#56b6c2",
+    base0D = "#61afef",
+    base0E = "#c678dd",
+    base0F = "#be5046",
+  },
+}

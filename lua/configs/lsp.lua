@@ -38,4 +38,18 @@ vim.diagnostic.config {
   float = { border = "single" },
 }
 
-vim.lsp.enable { "lua_ls" }
+vim.lsp.enable {
+  "lua_ls",
+  "html",
+  "cssls",
+  "ts_ls",
+  "jsonls",
+  "yamlls",
+  "gopls",
+  "rust_analyzer",
+  "bashls",
+  "taplo",
+  "pyright",
+  "ruff",
+  "omnisharp",
+}

@@ -3,6 +3,23 @@ local M = {}
 M.ensure_installed = {
   "lua-language-server",
   "stylua",
+  "html-lsp",
+  "css-lsp",
+  "typescript-language-server",
+  "json-lsp",
+  "yaml-language-server",
+  "gopls",
+  "rust-analyzer",
+  "bash-language-server",
+  "taplo",
+  "pyright",
+  "ruff",
+  "omnisharp",
+  "prettier",
+  "gofumpt",
+  "goimports",
+  "csharpier",
+  -- rustfmt has no mason package (ships via rustup); install with `rustup component add rustfmt`
 }
 
 function M.setup()

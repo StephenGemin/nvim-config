@@ -14,12 +14,34 @@ NVChad wrapper; see commit history for how each piece got ported over.
 ## Project structure
 
 ```
-init.lua               entry point: mapleader, lazy.nvim bootstrap, require("lazy").setup(...)
-lua/configs/lazy.lua    lazy.nvim setup options (UI, performance, disabled builtin plugins)
+init.lua                    entry point: mapleader, lazy.nvim bootstrap, colorscheme,
+                             require("lazy").setup("plugins", ...), require "options"/"autocmds"/"commands"
+lua/options.lua              vim.opt settings, Mason $PATH prepend
+lua/autocmds.lua             FileType treesitter-start, parser-rebuild-on-upgrade
+lua/commands.lua             :SetTheme user command (wraps vim.cmd.colorscheme + persists choice)
+lua/plugins/init.lua          lazy.nvim plugin spec: blink.cmp, nvim-treesitter (eager),
+                             nvim-lspconfig, mason.nvim, conform.nvim, nvim-autopairs (lazy)
+lua/configs/lazy.lua          lazy.nvim setup options (UI, performance, disabled builtin plugins)
+lua/configs/lsp.lua           LspAttach keymaps, blink.cmp capabilities, diagnostic config,
+                             vim.lsp.enable {...} server list
+lua/configs/treesitter.lua    require("nvim-treesitter").install {...} parser list
+lua/configs/mason.lua         static ensure_installed list (LSP servers + formatters)
+lua/configs/conform.lua       formatters_by_ft, format_on_save
+lsp/lua_ls.lua                per-server vim.lsp.config override (auto-discovered by name)
+colors/onedark.lua            thin :colorscheme wrapper: sets colors_name/background, calls theme.apply
+lua/themes/onedark.lua        onedark palette (base_30/base_16-style tables)
+lua/theme/apply.lua           shared highlight-group-applying logic, parameterized on a palette
+lua/theme/state.lua           persists :SetTheme's active theme name across restarts
 ```
 
-This is early — options, autocmds, mappings, LSP config, and the actual plugin spec land in
-follow-up commits. Update this map whenever a module is added, removed, or moved.
+Other LSP servers (html, cssls, ts_ls, jsonls, yamlls, gopls, rust_analyzer, bashls, taplo,
+pyright, ruff, omnisharp) are enabled in `lua/configs/lsp.lua` with no local `lsp/<name>.lua`
+override — nvim-lspconfig ships complete `cmd`/`filetypes`/`root_markers` defaults for all of
+them on its own runtimepath, which `vim.lsp.config` merges automatically. Only add a file
+under `lsp/` for a server when it needs a genuine override, as `lua_ls.lua` does.
+
+Mappings, telescope/gitsigns/nvim-tree/etc., lualine/bufferline/snacks, and plenary specs land
+in follow-up commits. Update this map whenever a module is added, removed, or moved.
 
 ## Reading this repo efficiently
 

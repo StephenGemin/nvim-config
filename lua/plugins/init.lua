@@ -72,4 +72,10 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     opts = {},
   },
+
+  {
+    "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+    opts = require "configs.nvimtree",
+  },
 }

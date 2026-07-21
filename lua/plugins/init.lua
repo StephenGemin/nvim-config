@@ -149,4 +149,11 @@ return {
     event = "VeryLazy",
     opts = require "configs.bufferline",
   },
+
+  {
+    -- eager: mappings.lua requires it at top level (resize/move-cursor keymaps),
+    -- not inside a lazy-loaded closure
+    "mrjones2014/smart-splits.nvim",
+    lazy = false,
+  },
 }

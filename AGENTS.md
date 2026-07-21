@@ -15,15 +15,19 @@ NVChad wrapper; see commit history for how each piece got ported over.
 
 ```
 init.lua                    entry point: mapleader, lazy.nvim bootstrap, colorscheme,
-                             require("lazy").setup("plugins", ...), require "options"/"autocmds"/"commands"
+                             require("lazy").setup("plugins", ...), require "options"/"autocmds"/
+                             "commands", scheduled require "mappings"
 lua/options.lua              vim.opt settings, Mason $PATH prepend
 lua/autocmds.lua             FileType treesitter-start, parser-rebuild-on-upgrade
 lua/commands.lua             :SetTheme user command (wraps vim.cmd.colorscheme + persists choice)
+lua/mappings.lua              ; -> :, Colemak-DH block, smart-splits resize/move/swap, jumplist
+                             (<C-Left>/<C-Right>), comment toggle, buffers, terminal, telescope
+                             pickers, nvim-tree, format, diagnostics loclist, which-key
 lua/plugins/init.lua          lazy.nvim plugin spec: blink.cmp, nvim-treesitter, nvim-web-devicons,
                              snacks.nvim (eager), nvim-lspconfig, mason.nvim, conform.nvim,
                              nvim-autopairs, telescope.nvim, gitsigns.nvim, nvim-tree.lua,
                              nvim-highlight-colors, which-key.nvim, indent-blankline.nvim,
-                             lualine.nvim, bufferline.nvim (lazy)
+                             lualine.nvim, bufferline.nvim (lazy), smart-splits.nvim (eager)
 lua/configs/lazy.lua          lazy.nvim setup options (UI, performance, disabled builtin plugins)
 lua/configs/lsp.lua           LspAttach keymaps, blink.cmp capabilities, diagnostic config,
                              vim.lsp.enable {...} server list
@@ -57,8 +61,8 @@ gitsigns.nvim and nvim-highlight-colors have no dedicated `lua/configs/*.lua` fi
 inline via `opts = {...}` in `lua/plugins/init.lua` instead — plugin defaults already cover this
 repo's needs, aside from gitsigns' delete/changedelete sign glyphs (matching NvChad's).
 
-Mappings land in a follow-up commit (Phase 7 — bufferline/terminal/telescope/nvim-tree/rename/
-which-key bindings). Update this map whenever a module is added, removed, or moved.
+`vim.lsp.buf.rename` (`<leader>ra`) is a buffer-local LSP keymap set in `lua/configs/lsp.lua`,
+not in `lua/mappings.lua`. Update this map whenever a module is added, removed, or moved.
 
 ## Reading this repo efficiently
 

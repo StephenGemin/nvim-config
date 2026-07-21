@@ -19,3 +19,7 @@ vim.cmd.colorscheme(require("theme.state").read "onedark")
 require "options"
 require "autocmds"
 require "commands"
+
+vim.schedule(function()
+  require "mappings"
+end)

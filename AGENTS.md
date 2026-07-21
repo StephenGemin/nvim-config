@@ -19,10 +19,11 @@ init.lua                    entry point: mapleader, lazy.nvim bootstrap, colorsc
 lua/options.lua              vim.opt settings, Mason $PATH prepend
 lua/autocmds.lua             FileType treesitter-start, parser-rebuild-on-upgrade
 lua/commands.lua             :SetTheme user command (wraps vim.cmd.colorscheme + persists choice)
-lua/plugins/init.lua          lazy.nvim plugin spec: blink.cmp, nvim-treesitter, nvim-web-devicons
-                             (eager), nvim-lspconfig, mason.nvim, conform.nvim, nvim-autopairs,
-                             telescope.nvim, gitsigns.nvim, nvim-tree.lua, nvim-highlight-colors,
-                             which-key.nvim, indent-blankline.nvim (lazy)
+lua/plugins/init.lua          lazy.nvim plugin spec: blink.cmp, nvim-treesitter, nvim-web-devicons,
+                             snacks.nvim (eager), nvim-lspconfig, mason.nvim, conform.nvim,
+                             nvim-autopairs, telescope.nvim, gitsigns.nvim, nvim-tree.lua,
+                             nvim-highlight-colors, which-key.nvim, indent-blankline.nvim,
+                             lualine.nvim, bufferline.nvim (lazy)
 lua/configs/lazy.lua          lazy.nvim setup options (UI, performance, disabled builtin plugins)
 lua/configs/lsp.lua           LspAttach keymaps, blink.cmp capabilities, diagnostic config,
                              vim.lsp.enable {...} server list
@@ -33,6 +34,11 @@ lua/configs/telescope.lua     sorting/layout opts, q closes in normal mode
 lua/configs/nvimtree.lua      my_on_attach (default keymaps + Colemak e->,,, rename remap),
                              filters.git_ignored = false
 lua/configs/indent-blankline.lua  hide_first_space_indent_level hook, then ibl.setup {}
+lua/configs/lualine.lua       theme = "auto", rerun on ColorScheme so :SetTheme switches apply
+lua/configs/bufferline.lua    options.offsets for nvim-tree's sidebar
+lua/configs/terminal.lua      Snacks.terminal's opts.terminal (bottom split, 30% height)
+lua/configs/dashboard.lua     Snacks.dashboard's opts.dashboard (header, keys/recent-files/
+                             projects/git-status panes), ported verbatim from nvim-starter
 lsp/lua_ls.lua                per-server vim.lsp.config override (auto-discovered by name)
 colors/onedark.lua            thin :colorscheme wrapper: sets colors_name/background, calls theme.apply
 lua/themes/onedark.lua        onedark palette (base_30/base_16-style tables)
@@ -51,8 +57,8 @@ gitsigns.nvim and nvim-highlight-colors have no dedicated `lua/configs/*.lua` fi
 inline via `opts = {...}` in `lua/plugins/init.lua` instead — plugin defaults already cover this
 repo's needs, aside from gitsigns' delete/changedelete sign glyphs (matching NvChad's).
 
-Mappings, lualine/bufferline/snacks land in follow-up commits. Update this map whenever a
-module is added, removed, or moved.
+Mappings land in a follow-up commit (Phase 7 — bufferline/terminal/telescope/nvim-tree/rename/
+which-key bindings). Update this map whenever a module is added, removed, or moved.
 
 ## Reading this repo efficiently
 

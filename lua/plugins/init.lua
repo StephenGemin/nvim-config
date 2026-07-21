@@ -28,6 +28,18 @@ return {
     opts = {},
   },
 
+  {
+    -- eager + high priority: the dashboard replaces the empty startup buffer, so it must be
+    -- ready before any lazy-loading event fires
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      dashboard = require "configs.dashboard",
+      terminal = require "configs.terminal",
+    },
+  },
+
   -- LAZY LOAD (event/cmd-gated) --
 
   {
@@ -120,5 +132,21 @@ return {
     config = function()
       require "configs.indent-blankline"
     end,
+  },
+
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    -- config (not opts): registers a ColorScheme autocmd so lualine's "auto" theme
+    -- follows :SetTheme switches, not just plain opts
+    config = function()
+      require "configs.lualine"
+    end,
+  },
+
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    opts = require "configs.bufferline",
   },
 }

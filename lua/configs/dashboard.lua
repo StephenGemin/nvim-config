@@ -53,6 +53,9 @@ return {
   -- Two-pane layout: shortcuts on the left, recent activity on the right.
   sections = {
     { section = "header" },
+    -- NvChad's dashboard footer trick: the nvim logo glyph stands in for the "N" in
+    -- "Neovim" ("eovim" + glyph reads as "Neovim").
+    { align = "center", padding = 1, text = { { " Powered By eovim", hl = "footer" } } },
     { section = "keys", gap = 1, padding = 1 },
     { section = "startup" },
     { pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },

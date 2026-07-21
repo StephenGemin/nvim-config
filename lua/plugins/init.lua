@@ -74,11 +74,15 @@ return {
 
   {
     "lewis6991/gitsigns.nvim",
-    -- no lua/configs/gitsigns.lua: NVChad's only customization here is two sign-text glyphs,
-    -- not worth reproducing (see license-posture decision) or inventing our own; same call
-    -- already made for blink.cmp's dropped configs/blink.lua
+    -- no lua/configs/gitsigns.lua: only override is the delete/changedelete sign glyphs
+    -- (matching NvChad's), everything else is plugin defaults
     event = { "BufReadPre", "BufNewFile" },
-    opts = {},
+    opts = {
+      signs = {
+        delete = { text = "󰍵" },
+        changedelete = { text = "󱕖" },
+      },
+    },
   },
 
   {
@@ -89,8 +93,8 @@ return {
 
   {
     "brenoprata10/nvim-highlight-colors",
-    -- no lua/configs/highlight-colors.lua: its own defaults (hex/rgb/hsl/named colors on,
-    -- background-color render, tailwind/ansi off) already cover this repo's needs
+    -- no lua/configs/highlight-colors.lua: plugin defaults (hex/rgb/hsl/named colors on,
+    -- tailwind/ansi off) already cover this repo's needs; no further configuration needed
     -- VeryLazy (not BufReadPre/BufNewFile): setup() retroactively highlights every open buffer,
     -- so it must fire even on a no-file startup session that never triggers a buf-read event
     event = "VeryLazy",

@@ -47,9 +47,9 @@ override — nvim-lspconfig ships complete `cmd`/`filetypes`/`root_markers` defa
 them on its own runtimepath, which `vim.lsp.config` merges automatically. Only add a file
 under `lsp/` for a server when it needs a genuine override, as `lua_ls.lua` does.
 
-gitsigns.nvim and nvim-highlight-colors have no dedicated `lua/configs/*.lua` file — their own
-plugin defaults already cover this repo's needs, configured inline via `opts = {}` in
-`lua/plugins/init.lua`.
+gitsigns.nvim and nvim-highlight-colors have no dedicated `lua/configs/*.lua` file, configured
+inline via `opts = {...}` in `lua/plugins/init.lua` instead — plugin defaults already cover this
+repo's needs, aside from gitsigns' delete/changedelete sign glyphs (matching NvChad's).
 
 Mappings, lualine/bufferline/snacks land in follow-up commits. Update this map whenever a
 module is added, removed, or moved.

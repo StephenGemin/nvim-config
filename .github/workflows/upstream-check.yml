@@ -2,18 +2,25 @@ name: Upstream check
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # weekly, Monday 06:00 UTC
+    - cron: "0 6 1 * *" # monthly, 1st 06:00 UTC
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
+      # persist-credentials (default true) is load-bearing: the push step
+      # below relies on the credential it leaves configured in .git/config.
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Install Neovim (stable)
         run: |
@@ -32,11 +39,27 @@ jobs:
             echo "XDG_CACHE_HOME=$RUNNER_TEMP/xdg/cache"
           } >> "$GITHUB_ENV"
 
-      # No cache and no lockfile pin: always installs each plugin's latest
-      # commit, so a red run here means upstream drift, not this repo -- an
-      # early warning that it's not safe to bump lazy-lock.json yet.
+      # No cache: always installs each plugin's latest commit satisfying its
+      # version spec. A red run here means upstream drift, not this repo, and
+      # lazy-lock.json is left untouched below.
       - name: Install latest plugin commits
         run: nvim --headless -c "Lazy! sync" -c "qa"
 
       - name: Run smoke test
         run: nvim --headless -c "luafile scripts/smoke_test.lua"
+
+      # Uses the default GITHUB_TOKEN (no PAT/secret) -- this push won't
+      # trigger ci.yml (the token's events don't fire other workflows), which
+      # is fine since the smoke test above already validated this exact
+      # lazy-lock.json.
+      - name: Commit and push lazy-lock.json if it changed
+        run: |
+          if git diff --quiet -- lazy-lock.json; then
+            echo "lazy-lock.json unchanged, nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lazy-lock.json
+          git commit -m "chore(deps): update lazy-lock.json"
+          git push origin HEAD:main

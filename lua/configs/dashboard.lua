@@ -12,7 +12,7 @@ set_header_highlights()
 
 -- colors/onedark.lua's "hi clear" (run right after this module loads, during init.lua's
 -- own startup sequence) wipes these groups before the dashboard ever paints -- reapply on
--- every ColorScheme event, same pattern as configs/lualine.lua's theme re-apply.
+-- every ColorScheme event.
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = set_header_highlights,
 })

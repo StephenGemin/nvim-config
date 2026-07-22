@@ -22,6 +22,13 @@ return {
     yellow = "#e7c787",
     line = "#31353d",
     pmenu_bg = "#61afef",
+    nord_blue = "#81A1C1",
+    dark_purple = "#c882e7",
+    cyan = "#a3b8ef",
+    orange = "#fca2aa",
+    statusline_bg = "#22262e",
+    lightbg = "#2d3139",
+    folder_bg = "#61afef",
   },
 
   base_16 = {

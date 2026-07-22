@@ -137,11 +137,7 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    -- config (not opts): registers a ColorScheme autocmd so lualine's "auto" theme
-    -- follows :SetTheme switches, not just plain opts
-    config = function()
-      require "configs.lualine"
-    end,
+    opts = require "configs.lualine",
   },
 
   {

@@ -204,6 +204,37 @@ return function(palette)
     TelescopeResultsDiffAdd = { fg = colors.green },
     TelescopeResultsDiffChange = { fg = colors.yellow },
     TelescopeResultsDiffDelete = { fg = colors.red },
+
+    -- nvim-tree (base46 integrations/nvimtree.lua)
+    NvimTreeNormal = { bg = colors.darker_black },
+    NvimTreeNormalNC = { bg = colors.darker_black },
+    NvimTreeEndOfBuffer = { fg = colors.darker_black },
+    NvimTreeWinSeparator = { fg = colors.darker_black, bg = colors.darker_black },
+    NvimTreeCursorLine = { bg = colors.black },
+    -- upstream darkens colors.line via base46's change_hex_lightness helper (no equivalent here)
+    NvimTreeIndentMarker = { fg = colors.line },
+    NvimTreeFolderIcon = { fg = colors.folder_bg },
+    NvimTreeFolderName = { fg = colors.folder_bg },
+    NvimTreeEmptyFolderName = { fg = colors.folder_bg },
+    NvimTreeOpenedFolderName = { fg = colors.folder_bg },
+    NvimTreeFolderArrowOpen = { fg = colors.folder_bg },
+    NvimTreeFolderArrowClosed = { fg = colors.grey_fg },
+    NvimTreeRootFolder = { fg = colors.red, bold = true },
+    NvimTreeSpecialFile = { fg = colors.yellow, bold = true },
+    NvimTreeGitDirty = { fg = colors.red },
+    NvimTreeGitNew = { fg = colors.yellow },
+    NvimTreeGitDeleted = { fg = colors.red },
+    NvimTreeGitIgnored = { fg = colors.light_grey },
+    NvimTreeWindowPicker = { fg = colors.red, bg = colors.black2 },
+    NvimTreeDiagnosticErrorFileHL = { link = "DiagnosticError" },
+    NvimTreeDiagnosticErrorFolderHL = { link = "DiagnosticError" },
+    NvimTreeDiagnosticWarnFileHL = { link = "DiagnosticWarn" },
+    NvimTreeDiagnosticWarnFolderHL = { link = "DiagnosticWarn" },
+    -- upstream links to base46's own "DiagnosticNormal" group, which doesn't exist here
+    NvimTreeDiagnosticInfoFileHL = { link = "DiagnosticInfo" },
+    NvimTreeDiagnosticInfoFolderHL = { link = "DiagnosticInfo" },
+    NvimTreeDiagnosticHintFileHL = { link = "DiagnosticHint" },
+    NvimTreeDiagnosticHintFolderHL = { link = "DiagnosticHint" },
   }
 
   for group, opts in pairs(groups) do

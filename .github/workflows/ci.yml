@@ -24,3 +24,42 @@ jobs:
 
       - name: Check formatting
         run: stylua --check . -g '**/*.lua'
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim (stable)
+        run: |
+          curl -fsSLo /tmp/nvim.tar.gz https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+          tar -C /tmp -xzf /tmp/nvim.tar.gz
+          echo "/tmp/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
+
+      - name: Point an isolated XDG config at this checkout
+        run: |
+          mkdir -p "$RUNNER_TEMP/xdg/config" "$RUNNER_TEMP/xdg/data" "$RUNNER_TEMP/xdg/state" "$RUNNER_TEMP/xdg/cache"
+          ln -s "$GITHUB_WORKSPACE" "$RUNNER_TEMP/xdg/config/nvim"
+          {
+            echo "XDG_CONFIG_HOME=$RUNNER_TEMP/xdg/config"
+            echo "XDG_DATA_HOME=$RUNNER_TEMP/xdg/data"
+            echo "XDG_STATE_HOME=$RUNNER_TEMP/xdg/state"
+            echo "XDG_CACHE_HOME=$RUNNER_TEMP/xdg/cache"
+          } >> "$GITHUB_ENV"
+
+      # Whole dir, not just nvim/lazy: nvim-treesitter installs parsers to a
+      # sibling nvim/site dir and mason.nvim installs LSP/formatter binaries to
+      # nvim/mason -- a narrower cache would silently reinstall both from
+      # scratch on every run despite a lazy-lock.json cache hit.
+      - uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/xdg/data/nvim
+          key: nvim-data-${{ hashFiles('lazy-lock.json') }}
+
+      # Pins every plugin to the commit recorded in lazy-lock.json, so this
+      # job is deterministic against a commit to this repo, not upstream drift.
+      - name: Install plugins from lazy-lock.json
+        run: nvim --headless -c "Lazy! restore" -c "qa"
+
+      - name: Run smoke test
+        run: nvim --headless -c "luafile scripts/smoke_test.lua"

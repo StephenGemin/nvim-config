@@ -9,30 +9,33 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: write
-
 jobs:
   smoke:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            nvim_asset: nvim-linux-x86_64
+            ts_asset: tree-sitter-cli-linux-x64
+          - os: macos-latest
+            nvim_asset: nvim-macos-arm64
+            ts_asset: tree-sitter-cli-macos-arm64
+    runs-on: ${{ matrix.os }}
     steps:
-      # persist-credentials (default true) is load-bearing: the push step
-      # below relies on the credential it leaves configured in .git/config.
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
 
       - name: Install Neovim (stable)
         run: |
-          curl -fsSLo /tmp/nvim.tar.gz https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+          curl -fsSLo /tmp/nvim.tar.gz https://github.com/neovim/neovim/releases/download/stable/${{ matrix.nvim_asset }}.tar.gz
           tar -C /tmp -xzf /tmp/nvim.tar.gz
-          echo "/tmp/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
+          echo "/tmp/${{ matrix.nvim_asset }}/bin" >> "$GITHUB_PATH"
 
       # nvim-treesitter's main branch shells out to this CLI to build every
       # parser; without it every parser install fails with ENOENT.
       - name: Install tree-sitter CLI
         run: |
-          curl -fsSLo /tmp/tree-sitter.zip https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-cli-linux-x64.zip
+          curl -fsSLo /tmp/tree-sitter.zip https://github.com/tree-sitter/tree-sitter/releases/latest/download/${{ matrix.ts_asset }}.zip
           unzip -o /tmp/tree-sitter.zip -d /tmp/tree-sitter-bin
           echo "/tmp/tree-sitter-bin" >> "$GITHUB_PATH"
 
@@ -47,24 +50,41 @@ jobs:
             echo "XDG_CACHE_HOME=$RUNNER_TEMP/xdg/cache"
           } >> "$GITHUB_ENV"
 
-      # No cache: always installs each plugin's latest commit satisfying its
-      # version spec. A red run here means upstream drift, not this repo, and
-      # lazy-lock.json is left untouched below.
+      # No cache: a red run here means upstream drift and do not update lazy-lock.json
       #
-      # nvim-treesitter's config() kicks off its own parser install async;
-      # waiting for it here (rather than letting it race against the next
-      # step's nvim process) avoids two installs colliding on the same
-      # on-disk parser cache.
+      # nvim-treesitter's config() kicks off its own parser install async;wait avoids race condition
       - name: Install latest plugin commits
         run: nvim --headless -c "Lazy! sync" -c "lua require('configs.treesitter').task:wait(120000)" -c "qa"
 
       - name: Run smoke test
         run: nvim --headless -c "luafile scripts/smoke_test.lua"
 
-      # Uses the default GITHUB_TOKEN (no PAT/secret) -- this push won't
-      # trigger ci.yml (the token's events don't fire other workflows), which
-      # is fine since the smoke test above already validated this exact
-      # lazy-lock.json.
+      # Only one matrix leg's lazy-lock.json needs to travel to the push job below
+      # every OS resolves the same upstream commits from the same version constraints.
+      - name: Upload lazy-lock.json
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lazy-lock-json
+          path: lazy-lock.json
+
+  # Separate job, gated on every matrix leg of `smoke` passing, so
+  # lazy-lock.json only ever gets pushed once confirmed safe on every OS
+  push-lock-file:
+    needs: smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # persist-credentials (default true) is load-bearing; leaves cred in .git/config
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: lazy-lock-json
+
       - name: Commit and push lazy-lock.json if it changed
         run: |
           if git diff --quiet -- lazy-lock.json; then

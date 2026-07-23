@@ -1,4 +1,3 @@
--- built-in branch/diff/diagnostics components already cover NVChad's old statusline git info;
 -- no LSP-progress spinner (would need a custom component or an extra plugin like fidget.nvim)
 local colors = require("themes.onedark").base_30
 
@@ -22,10 +21,30 @@ local theme = {
   },
 }
 
+local function lsp_client()
+  local clients = vim.lsp.get_clients { bufnr = 0 }
+  return clients[1] and ("  LSP ~ " .. clients[1].name .. " ") or ""
+end
+
+local function cwd()
+  return "󰉋 " .. vim.fn.fnamemodify(vim.uv.cwd(), ":t")
+end
+
 -- No custom component_separators/section_separators: lualine's own defaults are already
 -- the powerline glyphs this phase wanted.
 return {
   options = {
     theme = theme,
+    -- snacks.nvim's dashboard zeroes laststatus at startup and restores it later, so
+    -- lualine's own default (`vim.go.laststatus == 3`, read once at setup time) can catch
+    -- that transient 0 and latch onto a per-window statusline instead of the global one
+    globalstatus = true,
+  },
+  -- Stock lualine right side (encoding, fileformat, filetype, progress) is almost always
+  -- the same value (utf-8/unix) or redundant with location -- swap it for LSP client name
+  -- and cwd, which are actually useful.
+  sections = {
+    lualine_x = { lsp_client, cwd },
+    lualine_y = {},
   },
 }

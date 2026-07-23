@@ -36,6 +36,14 @@ jobs:
           tar -C /tmp -xzf /tmp/nvim.tar.gz
           echo "/tmp/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
 
+      # nvim-treesitter's main branch shells out to this CLI to build every
+      # parser; without it every parser install fails with ENOENT.
+      - name: Install tree-sitter CLI
+        run: |
+          curl -fsSLo /tmp/tree-sitter.zip https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-cli-linux-x64.zip
+          unzip -o /tmp/tree-sitter.zip -d /tmp/tree-sitter-bin
+          echo "/tmp/tree-sitter-bin" >> "$GITHUB_PATH"
+
       - name: Point an isolated XDG config at this checkout
         run: |
           mkdir -p "$RUNNER_TEMP/xdg/config" "$RUNNER_TEMP/xdg/data" "$RUNNER_TEMP/xdg/state" "$RUNNER_TEMP/xdg/cache"
@@ -58,8 +66,13 @@ jobs:
 
       # Pins every plugin to the commit recorded in lazy-lock.json, so this
       # job is deterministic against a commit to this repo, not upstream drift.
+      #
+      # nvim-treesitter's config() kicks off its own parser install async;
+      # waiting for it here (rather than letting it race against the next
+      # step's nvim process) avoids two installs colliding on the same
+      # on-disk parser cache.
       - name: Install plugins from lazy-lock.json
-        run: nvim --headless -c "Lazy! restore" -c "qa"
+        run: nvim --headless -c "Lazy! restore" -c "lua require('configs.treesitter').task:wait(120000)" -c "qa"
 
       - name: Run smoke test
         run: nvim --headless -c "luafile scripts/smoke_test.lua"

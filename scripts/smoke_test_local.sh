@@ -25,7 +25,7 @@ export XDG_STATE_HOME="$xdg_root/state"
 export XDG_CACHE_HOME="$xdg_root/cache"
 
 echo "==> Installing plugins from lazy-lock.json"
-nvim --headless -c "Lazy! restore" -c "qa"
+nvim --headless -c "Lazy! restore" -c "lua require('configs.treesitter').task:wait(120000)" -c "qa"
 
 echo "==> Running smoke test"
 nvim --headless -c "luafile scripts/smoke_test.lua"

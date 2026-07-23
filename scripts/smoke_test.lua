@@ -24,6 +24,13 @@ local ok, err = pcall(function()
   -- force every plugin to load
   vim.cmd "Lazy! load all"
 
+  -- configs.treesitter's install() call is fire-and-forget async, so its
+  -- errors can otherwise land after this script has already finished and
+  -- restored vim.notify -- block on its task instead of racing it.
+  if not require("configs.treesitter").task:wait(120000) then
+    error "nvim-treesitter parser install task reported failures"
+  end
+
   -- Open a real buffer per filetype in active use, to fire ft-autocmds /
   -- LSP-attach / treesitter-attach for each.
   for _, ft in ipairs { "lua", "html", "css", "markdown" } do

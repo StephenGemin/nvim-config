@@ -32,6 +32,7 @@ return {
     -- eager + high priority: the dashboard replaces the empty startup buffer, so it must be
     -- ready before any lazy-loading event fires
     "folke/snacks.nvim",
+    version = "*",
     priority = 1000,
     lazy = false,
     opts = {
@@ -44,6 +45,7 @@ return {
 
   {
     "neovim/nvim-lspconfig",
+    version = "*",
     event = { "BufReadPre", "BufNewFile" },
     -- declared as a dependency (not just relying on blink's own lazy = false) so lazy.nvim
     -- structurally guarantees blink.cmp is loaded before configs.lsp requires it for capabilities
@@ -55,6 +57,7 @@ return {
 
   {
     "williamboman/mason.nvim",
+    version = "*",
     event = "VeryLazy",
     config = function()
       require("configs.mason").setup()
@@ -63,6 +66,7 @@ return {
 
   {
     "stevearc/conform.nvim",
+    version = "*",
     event = "BufWritePre",
     opts = require "configs.conform",
   },
@@ -75,6 +79,7 @@ return {
 
   {
     "nvim-telescope/telescope.nvim",
+    version = "*",
     cmd = "Telescope",
     dependencies = { "nvim-lua/plenary.nvim" },
     -- config (not opts): configs.telescope references telescope.actions, which isn't
@@ -86,6 +91,7 @@ return {
 
   {
     "lewis6991/gitsigns.nvim",
+    version = "*",
     -- no lua/configs/gitsigns.lua: only override is the delete/changedelete sign glyphs
     -- (matching NvChad's), everything else is plugin defaults
     event = { "BufReadPre", "BufNewFile" },
@@ -99,6 +105,7 @@ return {
 
   {
     "nvim-tree/nvim-tree.lua",
+    version = "*",
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     opts = require "configs.nvimtree",
   },
@@ -123,6 +130,7 @@ return {
 
   {
     "lukas-reineke/indent-blankline.nvim",
+    version = "*",
     -- main = "ibl": the plugin's actual module name differs from its repo name (it also ships a
     -- legacy v2 compat shim lazy.nvim could otherwise auto-detect); matches upstream's own spec
     main = "ibl",
@@ -150,6 +158,7 @@ return {
     -- eager: mappings.lua requires it at top level (resize/move-cursor keymaps),
     -- not inside a lazy-loaded closure
     "mrjones2014/smart-splits.nvim",
+    version = "*",
     lazy = false,
   },
 }

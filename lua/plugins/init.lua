@@ -7,7 +7,12 @@ return {
     version = "1.*",
     lazy = false,
     dependencies = { "rafamadriz/friendly-snippets" },
-    opts = {},
+    opts = {
+      completion = { documentation = { auto_show = true } },
+      -- default snippet score_offset (-1, then -3 more for being a snippet) ranks
+      -- an exact trigger like `feat` below the plain-text buffer word "feat"
+      sources = { providers = { snippets = { score_offset = 2 } } },
+    },
   },
 
   {

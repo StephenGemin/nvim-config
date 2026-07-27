@@ -2,7 +2,7 @@ name: Upstream check
 
 on:
   schedule:
-    - cron: "0 6 * * *" # daily, 06:00 UTC -- temporary, watching first few runs
+    - cron: "0 6 1 * *" # monthly, 1st at 06:00 UTC
   workflow_dispatch:
 
 concurrency:

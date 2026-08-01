@@ -1,6 +1,7 @@
 local opt = vim.opt
 
 opt.laststatus = 3
+opt.showtabline = 2
 opt.showmode = false
 opt.splitkeep = "screen"
 

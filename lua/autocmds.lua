@@ -29,7 +29,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
     vim.schedule(function()
       local ok, treesitter = pcall(require, "nvim-treesitter")
-      if not ok then
+      -- kept permanently: diagnostic for the first-install race where require()
+      -- succeeds but returns a module without get_installed yet
+      vim.notify("autocmds debug: ok=" .. tostring(ok) .. " treesitter=" .. vim.inspect(treesitter), vim.log.levels.INFO)
+      if not ok or type(treesitter.get_installed) ~= "function" then
         vim.notify(
           "autocmds: nvim-treesitter API not found, skipping automatic parser rebuild; run :TSUpdate! manually.",
           vim.log.levels.WARN
